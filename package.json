@@ -1,0 +1,23 @@
+{
+  "name": "stresstracker-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "nanoid": "^5.1.11",
+    "nodemon": "^3.1.14"
+  },
+  "devDependencies": {
+    "eslint": "^10.4.0",
+    "eslint-config-dicodingacademy": "^0.9.5"
+  }
+}
