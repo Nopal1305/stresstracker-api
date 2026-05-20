@@ -13,7 +13,7 @@ export const addCheckin = (req, res, next) => {
         gadgetKerja, 
         sosial, 
         tanggal 
-    } = req.body;
+    } = req.validate;
 
     // 2. Destructuring bersarang (Nested) sekaligus Translate (Aliasing)
     const { 
