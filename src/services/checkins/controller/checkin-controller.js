@@ -1,120 +1,47 @@
-import { InvariantError, NotFoundError } from '../../../exceptions/index.js';
-import { nanoid } from 'nanoid';
+import CheckinRepository from '../repositories/checkin-repositories.js'; // Sesuaikan path-nya ya
 import response from '../../../utils/response.js';
-import checkin from '../checkin.js'; // Asumsi ini adalah array mock kamu
 
-export const addCheckin = (req, res, next) => {
-    // 1. Tangkap kelompok data utama dari request body
-    const { 
-        tidur, 
-        perasaan, 
-        aktivitas, 
-        gayaHidup, 
-        gadgetKerja, 
-        sosial, 
-        tanggal 
-    } = req.validate;
+// 1. Instansiasi repository agar bisa digunakan
+const checkinRepository = new CheckinRepository();
 
-    // 2. Destructuring bersarang (Nested) sekaligus Translate (Aliasing)
-    const { 
-        durasi: sleepHours, 
-        kualitas: sleepQuality, 
-        kebangunMalam: wokeUpMidnight, 
-        mimpiburuk: nightmares 
-    } = tidur || {}; // Tambahkan || {} untuk mencegah error jika undefined
+export const addCheckin = async (req, res, next) => { // Pastikan pakai 'async'
+    const {
+        tidur, perasaan, aktivitas, gayaHidup, gadgetKerja, sosial, tanggal
+    } = req.validated;
 
-    const { 
-        mood: moodScore, 
-        kecemasan: anxietyScore, 
-        energi: energyLevel, 
-        emosi: feelings 
-    } = perasaan || {};
+    // Destructuring & Translating (Tetap di sini sebagai penerjemah)
+    const { durasi: sleepHours, kualitas: sleepQuality, kebangunMalam: wokeUpMidnight, mimpiburuk: nightmares } = tidur || {};
+    const { mood: moodScore, kecemasan: anxietyScore, energi: energyLevel, emosi: feelings } = perasaan || {};
+    const { olahraga: exerciseDone, jenisOlahraga: exerciseType, durasiOlahraga: exerciseDuration, intensitas: exerciseIntensity, langkah: stepsCount } = aktivitas || {};
+    const { kafein: coffeeCups, airPutih: waterLiters, kualitasMakan: foodQuality, alkohol: alcoholConsumed, merokok: smoked } = gayaHidup || {};
+    const { screentime: screenTimeHours, screenSebelumTidur: screenBeforeBedMins, bebanKerja: workloadLevel, scrollingSosmed: doomScrolling, lembur: overtime, deadline: urgentDeadlines } = gadgetKerja || {};
+    const { interaksiSosial: socialInteraction, konflik: socialConflict, kesepian: feltLonely, meditasi: meditated, hobi: didHobbies, luarRuangan: outdoorTimeMins } = sosial || {};
 
-    const { 
-        olahraga: exerciseDone, 
-        jenisOlahraga: exerciseType, 
-        durasiOlahraga: exerciseDuration, 
-        intensitas: exerciseIntensity, 
-        langkah: stepsCount 
-    } = aktivitas || {};
+    // 2. Dummy owner sementara sampai ada fitur JWT/Authentication
+    const owner = 'user-dummy-123';
 
-    const { 
-        kafein: coffeeCups, 
-        airPutih: waterLiters, 
-        kualitasMakan: foodQuality, 
-        alkohol: alcoholConsumed, 
-        merokok: smoked 
-    } = gayaHidup || {};
-
-    const { 
-        screentime: screenTimeHours, 
-        screenSebelumTidur: screenBeforeBedMins, 
-        bebanKerja: workloadLevel, 
-        scrollingSosmed: doomScrolling, 
-        lembur: overtime, 
-        deadline: urgentDeadlines 
-    } = gadgetKerja || {};
-
-    const { 
-        interaksiSosial: socialInteraction, 
-        konflik: socialConflict, 
-        kesepian: feltLonely, 
-        meditasi: meditated, 
-        hobi: didHobbies, 
-        luarRuangan: outdoorTimeMins 
-    } = sosial || {};
-
-    const id = nanoid(16);
-    const createdAt = new Date().toISOString();
-    const updatedAt = createdAt;
-
-    const newcheckin = { 
-        id, 
-        sleepHours, 
-        wokeUpMidnight, 
-        nightmares, 
-        sleepQuality, 
-        moodScore, 
-        anxietyScore, 
-        energyLevel, 
-        feelings, 
-        exerciseDone, 
-        exerciseType, 
-        exerciseDuration, 
-        exerciseIntensity, 
-        stepsCount, 
-        coffeeCups, 
-        waterLiters, 
-        foodQuality, 
-        alcoholConsumed, 
-        smoked, 
-        screenTimeHours, 
-        screenBeforeBedMins, 
-        workloadLevel, 
-        doomScrolling, 
-        overtime, 
-        urgentDeadlines, 
-        socialInteraction, 
-        socialConflict, 
-        feltLonely, 
-        meditated, 
-        didHobbies, 
-        outdoorTimeMins, 
-        date: tanggal, // Menyimpan tanggal yang dikirim Fawwas
-        createdAt, 
-        updatedAt 
+    // 3. Rangkai data bersihnya
+    const checkinData = {
+        owner, date: tanggal,
+        sleepHours, sleepQuality, wokeUpMidnight, nightmares,
+        moodScore, anxietyScore, energyLevel, feelings,
+        exerciseDone, exerciseType, exerciseDuration, exerciseIntensity, stepsCount,
+        coffeeCups, waterLiters, foodQuality, alcoholConsumed, smoked,
+        screenTimeHours, screenBeforeBedMins, workloadLevel, doomScrolling, overtime, urgentDeadlines,
+        socialInteraction, socialConflict, feltLonely, meditated, didHobbies, outdoorTimeMins
     };
 
-    // 5. Masukkan ke dalam array (Mock Database)
-    checkin.push(newcheckin);
+    // 4. Kirim ke Repository dan tunggu ID-nya kembali
+    const checkinId = await checkinRepository.addCheckin(checkinData);
 
-    // 6. Validasi apakah berhasil masuk
-    const isSuccess = checkin.filter((checkin) => checkin.id === id).length > 0;
+    return response(res, 201, 'Catatan harian berhasil disimpan ke database', { checkinId });
+}
 
-    if (!isSuccess) {
-        return next(new InvariantError('Catatan harian gagal ditambahkan'));
-    }
+export const getAllCheckin = async (req, res, next) => {
+    const owner = 'user-dummy-123';
 
-    // 7. Kembalikan response sukses
-    return response(res, 201, 'Catatan harian berhasil disimpan', { newcheckin });
+    // Ambil data langsung dari PostgreSQL melalui Repository
+    const checkins = await checkinRepository.getCheckins(owner);
+
+    return response(res, 200, 'Berhasil mengambil riwayat catatan harian dari database', { checkins });
 }
