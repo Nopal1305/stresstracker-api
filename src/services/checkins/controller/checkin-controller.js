@@ -1,47 +1,45 @@
+/* eslint-disable camelcase */
 import CheckinRepository from '../repositories/checkin-repositories.js'; // Sesuaikan path-nya ya
 import response from '../../../utils/response.js';
 
-// 1. Instansiasi repository agar bisa digunakan
-const checkinRepository = new CheckinRepository();
+export const addCheckin = async (req, res, next) => {
+  try {
+    const { tanggal, tidur, gayaHidup, produktivitas, mentalSosial } = req.validated;
 
-export const addCheckin = async (req, res, next) => { // Pastikan pakai 'async'
-    const {
-        tidur, perasaan, aktivitas, gayaHidup, gadgetKerja, sosial, tanggal
-    } = req.validated;
+    const { durasi_tidur_menit, screen_sebelum_tidur, sering_terbangun_malam, mimpi_buruk } = tidur;
+    const { waktu_outdoor, minum_kopi_hari_ini, merokok, konsumsi_alkohol, aktivitas_hobi } = gayaHidup;
+    const { deadline_hari_ini, lembur, konsentrasi } = produktivitas;
+    const { suasana_hati, konflik_interpersonal, merasa_kesepian, meditasi, interaksi_sosial } = mentalSosial;
 
-    // Destructuring & Translating (Tetap di sini sebagai penerjemah)
-    const { durasi: sleepHours, kualitas: sleepQuality, kebangunMalam: wokeUpMidnight, mimpiburuk: nightmares } = tidur || {};
-    const { mood: moodScore, kecemasan: anxietyScore, energi: energyLevel, emosi: feelings } = perasaan || {};
-    const { olahraga: exerciseDone, jenisOlahraga: exerciseType, durasiOlahraga: exerciseDuration, intensitas: exerciseIntensity, langkah: stepsCount } = aktivitas || {};
-    const { kafein: coffeeCups, airPutih: waterLiters, kualitasMakan: foodQuality, alkohol: alcoholConsumed, merokok: smoked } = gayaHidup || {};
-    const { screentime: screenTimeHours, screenSebelumTidur: screenBeforeBedMins, bebanKerja: workloadLevel, scrollingSosmed: doomScrolling, lembur: overtime, deadline: urgentDeadlines } = gadgetKerja || {};
-    const { interaksiSosial: socialInteraction, konflik: socialConflict, kesepian: feltLonely, meditasi: meditated, hobi: didHobbies, luarRuangan: outdoorTimeMins } = sosial || {};
-
-    // 2. Dummy owner sementara sampai ada fitur JWT/Authentication
     const owner = 'user-dummy-123';
 
-    // 3. Rangkai data bersihnya
     const checkinData = {
-        owner, date: tanggal,
-        sleepHours, sleepQuality, wokeUpMidnight, nightmares,
-        moodScore, anxietyScore, energyLevel, feelings,
-        exerciseDone, exerciseType, exerciseDuration, exerciseIntensity, stepsCount,
-        coffeeCups, waterLiters, foodQuality, alcoholConsumed, smoked,
-        screenTimeHours, screenBeforeBedMins, workloadLevel, doomScrolling, overtime, urgentDeadlines,
-        socialInteraction, socialConflict, feltLonely, meditated, didHobbies, outdoorTimeMins
+      owner, date: tanggal,
+      durasi_tidur_menit, screen_sebelum_tidur, sering_terbangun_malam, mimpi_buruk,
+      waktu_outdoor, minum_kopi_hari_ini, merokok, konsumsi_alkohol, aktivitas_hobi,
+      deadline_hari_ini, lembur, konsentrasi,
+      suasana_hati, konflik_interpersonal, merasa_kesepian, meditasi, interaksi_sosial
     };
 
-    // 4. Kirim ke Repository dan tunggu ID-nya kembali
-    const checkinId = await checkinRepository.addCheckin(checkinData);
+    // Nanti di sini kita selipkan Axios untuk hit API Python pakai data `checkinData`
+    // Hasil dari Python (stress_level) ditambahkan ke objek checkinData
 
-    return response(res, 201, 'Catatan harian berhasil disimpan ke database', { checkinId });
-}
+    const result = await checkinRepository.addCheckin(checkinData);
+
+    if (!result || !result.id) {
+      throw new InvariantError('Catatan harian gagal ditambahkan ke database');
+    }
+
+    return response(res, 201, 'Catatan harian berhasil disimpan ke database', { checkinId: result.id });
+  } catch (error) {
+    return next(error);
+  }
+};
 
 export const getAllCheckin = async (req, res, next) => {
-    const owner = 'user-dummy-123';
+  const owner = 'user-dummy-123';
 
-    // Ambil data langsung dari PostgreSQL melalui Repository
-    const checkins = await checkinRepository.getCheckins(owner);
+  const checkins = await checkinRepository.getCheckins(owner);
 
-    return response(res, 200, 'Berhasil mengambil riwayat catatan harian dari database', { checkins });
-}
+  return response(res, 200, 'Berhasil mengambil riwayat catatan harian dari database', { checkins });
+};
