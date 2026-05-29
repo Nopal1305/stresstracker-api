@@ -1,5 +1,5 @@
 import express from 'express';
-import { addCheckin, getAllCheckin } from '../controller/checkin-controller.js';
+import { addCheckin, getLatestCheckin } from '../controller/checkin-controller.js';
 import validate from '../../../middleware/validate.js';
 import { CheckinPayloadSchema } from '../validator/schema.js';
 import authenticateToken from '../../../middleware/auth.js';
@@ -7,6 +7,6 @@ import authenticateToken from '../../../middleware/auth.js';
 const router = express.Router();
 
 router.post('/checkins', authenticateToken, validate(CheckinPayloadSchema), addCheckin);
-router.get('/checkins', authenticateToken, getAllCheckin);
+router.get('/checkins', authenticateToken, getLatestCheckin);
 
 export default router;

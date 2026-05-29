@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /**
  * @type {import('node-pg-migrate').ColumnDefinitions | undefined}
  */
@@ -15,8 +16,8 @@ export const up = (pgm) => {
     password: { type: 'TEXT', notNull: true },
     fullname: { type: 'TEXT', notNull: true },
 
-    birth_date: { type: 'DATE', notNull: true }, // Untuk menghitung 'usia' secara dinamis
-    jenis_kelamin: { type: 'VARCHAR(10)', notNull: true }, // 'Pria' atau 'Wanita'
+    birth_date: { type: 'DATE', notNull: true },
+    jenis_kelamin: { type: 'VARCHAR(10)', notNull: true },
     pekerjaan: { type: 'VARCHAR(100)', notNull: true },
 
     created_at: { type: 'TEXT', notNull: true },

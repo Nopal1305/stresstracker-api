@@ -1,5 +1,5 @@
 import AuthenticationRepositories from '../repositories/authentication-repositories.js';
-import UserRepository from '../../users/repositories/user-repositorie.js';
+import UserRepository from '../../users/repositories/user-repositories.js';
 import TokenManager from '../../../security/token-manager.js';
 import response from '../../../utils/response.js';
 import InvariantError from '../../../exceptions/invariant-error.js';
@@ -18,7 +18,7 @@ export const login = async (req, res, next) => {
 
   await AuthenticationRepositories.addRefreshToken(refreshToken);
 
-  return response(res, 201, 'Authentication berhasil ditambahkan', {
+  return response(res, 201, 'User berhasil login', {
     accessToken,
     refreshToken
   });

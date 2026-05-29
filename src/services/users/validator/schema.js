@@ -5,6 +5,6 @@ export const UserRegistrationSchema = Joi.object({
   password: Joi.string().min(6).required(),
   fullname: Joi.string().required(),
   birthDate: Joi.string().isoDate().required(),
-  jenisKelamin: Joi.string().valid('Pria', 'Wanita').required(),
-  pekerjaan: Joi.string().required(),
+  jenisKelamin: Joi.string().valid('Laki-laki', 'Perempuan').required(),
+  pekerjaan: Joi.string().valid('Dokter', 'Freelancer', 'Guru', 'Irt', 'Karyawan', 'Mahasiswa', 'Wirausaha').required(),
 });

@@ -52,7 +52,7 @@ class UserRepository {
 
   async getUserById(Id) {
     const query = {
-      text: 'SELECT id, username, fullname, birt_date AS "birthDate", jenis_kelamin AS "jenisKelamin", pekerjaan FROM users WHERE id=$1',
+      text: 'SELECT id, username, fullname, birth_date AS "birthDate", jenis_kelamin AS "jenisKelamin", pekerjaan FROM users WHERE id=$1',
       values: [Id]
     };
 

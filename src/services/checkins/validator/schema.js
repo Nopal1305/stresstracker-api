@@ -16,7 +16,7 @@ export const CheckinPayloadSchema = Joi.object({
     minum_kopi_hari_ini: Joi.string().valid('Ya', 'Tidak').required(),
     merokok: Joi.string().valid('Ya', 'Tidak').required(),
     konsumsi_alkohol: Joi.string().valid('Ya', 'Tidak').required(),
-    aktivitas_hobi: Joi.string().required(),
+    aktivitas_hobi: Joi.string().valid('Ya', 'Tidak').required()
   }).required(),
 
   produktivitas: Joi.object({
@@ -26,7 +26,7 @@ export const CheckinPayloadSchema = Joi.object({
   }).required(),
 
   mentalSosial: Joi.object({
-    suasana_hati: Joi.string().required(),
+    suasana_hati: Joi.string().valid('Positif', 'Negatif', 'Netral', 'Campur').required(),
     konflik_interpersonal: Joi.string().valid('Ya', 'Tidak').required(),
     merasa_kesepian: Joi.string().valid('Ya', 'Tidak').required(),
     meditasi: Joi.string().valid('Ya', 'Tidak').required(),

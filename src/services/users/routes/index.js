@@ -7,6 +7,6 @@ import { UserRegistrationSchema } from '../validator/schema.js';
 const router = express.Router();
 
 router.post('/register', validate(UserRegistrationSchema), registerUser);
-router.post('/me', authenticateToken, getUserProfile);
+router.get('/me', authenticateToken, getUserProfile);
 
 export default router;
