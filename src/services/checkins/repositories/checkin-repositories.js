@@ -1,13 +1,12 @@
 /* eslint-disable camelcase */
-import pkg from 'pg';
+import pool from '../../../api/db.js';
 import { nanoid } from 'nanoid';
 import InvariantError from '../../../exceptions/invariant-error.js';
 
-const { Pool } = pkg;
 
 class CheckinRepository {
   constructor() {
-    this._pool = new Pool();
+    this._pool = pool;
   }
 
   async addCheckin({

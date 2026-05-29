@@ -1,4 +1,4 @@
-import pkg from 'pg';
+import pool from '../../../api/db.js';
 import { nanoid } from 'nanoid';
 import bcrypt from 'bcrypt';
 import { InvariantError, AuthenticationError } from '../../../exceptions/index.js';
@@ -7,7 +7,7 @@ const { Pool } = pkg;
 
 class UserRepository {
   constructor() {
-    this._pool = new Pool();
+    this._pool = pool;;
   }
 
   async verifyNewUsername(username) {
