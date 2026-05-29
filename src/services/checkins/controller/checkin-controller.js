@@ -42,10 +42,9 @@ export const addCheckin = async (req, res, next) => {
 
     let stress_level_result = null;
     try {
-      // Kita pakai await supaya Node.js nunggu jawaban dari Python dulu
-      const mlResponse = await axios.post('http://localhost:5001/predict', payloadData);
+      
+      const mlResponse = await axios.post('https://nooww-stresstracker-ml.hf.space', payloadData);
 
-      // Ambil angka hasilnya (misal: 1, 2, atau 3)
       if (mlResponse.data && mlResponse.data.status === 'success') {
         stress_level_result = mlResponse.data.stress_level_result;
       }
