@@ -1,4 +1,4 @@
-import pool from '../../../api/db';
+import pool from '../../../api/db.js';
 
 class AuthenticationRepositories {
   constructor() {
