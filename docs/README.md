@@ -2,7 +2,8 @@
 
 API untuk mencatat checkin harian dan memprediksi tingkat stres menggunakan Machine Learning.
 
----
+## Endpoint
+https://stresstracker-api.vercel.app
 
 ## User
 
