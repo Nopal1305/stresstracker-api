@@ -1,4 +1,5 @@
 * [Home](/)
+* [Endpoint](/)
 * [User](/?id=user)
   * [Register](/?id=register)
   * [Login](/?id=login)
