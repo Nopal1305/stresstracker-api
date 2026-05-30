@@ -3,7 +3,6 @@ import { nanoid } from 'nanoid';
 import bcrypt from 'bcrypt';
 import { InvariantError, AuthenticationError } from '../../../exceptions/index.js';
 
-const { Pool } = pkg;
 
 class UserRepository {
   constructor() {

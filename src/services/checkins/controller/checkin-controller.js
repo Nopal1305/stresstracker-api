@@ -42,14 +42,15 @@ export const addCheckin = async (req, res, next) => {
 
     let stress_level_result = null;
     try {
-      
-      const mlResponse = await axios.post('https://nooww-stresstracker-ml.hf.space', payloadData);
+
+      const mlResponse = await axios.post('https://nooww-stresstracker-ml.hf.space/predict', payloadData);
 
       if (mlResponse.data && mlResponse.data.status === 'success') {
         stress_level_result = mlResponse.data.stress_level_result;
       }
     } catch (mlError) {
       console.error('Gagal menghubungi API Python:', mlError.message);
+      console.log('ERROR DARI HUGGING FACE:', mlError.response?.data || mlError.message);
     }
 
     const checkinData = {
