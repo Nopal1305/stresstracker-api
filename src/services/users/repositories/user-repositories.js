@@ -124,7 +124,7 @@ class UserRepository {
     const user = result.rows[0];
 
     if (!user.is_verified) {
-      return new InvariantError('Akun belum diverifikasi');
+      throw new InvariantError('Akun belum diverifikasi');
     }
 
     const match = await bcrypt.compare(password, user.password);
