@@ -1,17 +1,35 @@
-import UserRepository from '../repositories/user-repositories.js'; // Sesuaikan path-nya ya!
+import UserRepository from '../repositories/user-repositories.js';
 import response from '../../../utils/response.js';
 import userRepositorie from '../repositories/user-repositories.js';
+import sendOtp from '../../../utils/email-sender.js';
 
 
 export const registerUser = async (req, res, next) => {
   try {
-    const { username, password, fullname, birthDate, jenisKelamin, pekerjaan } = req.validated;
+    const { email, username, password, fullname, birthDate, jenisKelamin, pekerjaan } = req.validated;
+
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiredAt = new Date(Date.now() + 5 * 60 * 1000);
 
     const userId = await UserRepository.addUser({
-      username, password, fullname, birthDate, jenisKelamin, pekerjaan
+      email, username, password, fullname, birthDate, jenisKelamin, pekerjaan, otpCode, otpExpiredAt
     });
 
-    return response(res, 201, 'Registrasi berhasil! Akun telah dibuat.', { userId });
+    await sendOtp(email, otpCode);
+
+    return response(res, 201, 'Registrasi tahap 1 berhasil! Silakan cek email untuk kode verifikasi.', { userId, email });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const verifyOTP = async (req, res, next) => {
+  try {
+    const { email, otpCode } = req.validated;
+
+    await UserRepository.verifyUserOTP(email, otpCode);
+
+    return response(res, 200, 'Verifikasi berhasil!');
   } catch (error) {
     return next(error);
   }

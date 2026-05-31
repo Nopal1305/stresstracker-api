@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 export const postAuthenticationPayloadSchema = Joi.object({
-  username: Joi.string().required(),
+  identifier: Joi.string().required(),
   password: Joi.string().required(),
 });
 
