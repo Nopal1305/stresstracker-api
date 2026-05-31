@@ -10,6 +10,13 @@ export const addCheckin = async (req, res, next) => {
     const owner = req.user.id;
     const userProfile = await UserRepository.getUserById(owner);
 
+    if (!userProfile) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Data user tidak ditemukan. Silakan login ulang.'
+      });
+    }
+
     const tanggalLahir = userProfile.birthDate || userProfile.birth_date;
 
     let usia = 20; // Default kalau gagal

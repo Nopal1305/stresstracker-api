@@ -102,7 +102,7 @@ class UserRepository {
     };
 
     const user = await this._pool.query(query);
-    if (!user) {
+    if (user.rows.length === 0) {
       return null;
     }
 
