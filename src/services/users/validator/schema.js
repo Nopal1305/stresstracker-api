@@ -12,5 +12,20 @@ export const UserRegistrationSchema = Joi.object({
 
 export const VerifyOTPSchema = Joi.object({
   email: Joi.string().email({ tlds: { allow: true } }).required(),
-  otpCode: Joi.string().length(6).required(), // Pakai .length(6) kalau kodemu fix 6 digit
+  otpCode: Joi.string().length(6).required(),
+});
+
+export const ForgotPasswordSchema = Joi.object({
+  email: Joi.string().email({ tlds: { allow: true } }).required(),
+});
+
+export const ResetPasswordSchema = Joi.object({
+  email: Joi.string().email({ tlds: { allow: true } }).required(),
+  otpCode: Joi.string().length(6).required(),
+  newPassword: Joi.string().min(6).required(),
+});
+
+export const ChangePasswordSchema = Joi.object({
+  oldPassword: Joi.string().required(),
+  newPassword: Joi.string().min(8).required()
 });

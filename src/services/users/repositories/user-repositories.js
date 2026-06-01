@@ -133,6 +133,70 @@ class UserRepository {
     }
     return user.id;
   }
+
+  async addResetOTP(email, otpCode, otpExpiredAt) {
+    const query = {
+      text: 'UPDATE users SET otp_code=$1, otp_expired_at=$2 WHERE email=$3 RETURNING id',
+      values: [otpCode, otpExpiredAt, email]
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new InvariantError('Email belum terdaftar');
+    }
+  }
+
+  async resetPassword(email, otpCode, hashedPassword) {
+    const querySearch = {
+      text: 'SELECT  otp_code, otp_expired_at FROM users WHERE email=$1',
+      values: [email]
+    };
+
+    const resultSearch = await this._pool.query(querySearch);
+
+    if (!resultSearch.rows.length) {
+      throw new InvariantError('Email tidak terdaftar');
+    }
+
+    const user = resultSearch.rows[0];
+
+    if (user.otp_code !== otpCode) {
+      throw new InvariantError('Kode otp salah');
+    }
+
+    const now = new Date();
+    if (user.otp_expired_at < now) {
+      throw new InvariantError('Kode OTP sudah kedaluwarsa. Silakan request ulang.');
+    }
+
+    const queryUpdate = {
+      text: 'UPDATE users SET password = $1, otp_code = NULL, otp_expired_at = NULL WHERE email = $2',
+      values: [hashedPassword, email]
+    };
+    await this._pool.query(queryUpdate);
+  }
+
+  async getUserPasswordById(id) {
+    const query = {
+      text: 'SELECT password FROM users WHERE id = $1',
+      values: [id],
+    };
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('User tidak ditemukan');
+    }
+    return result.rows[0];
+  }
+
+  async updatePassword(id, hashedPassword) {
+    const query = {
+      text: 'UPDATE users SET password = $1 WHERE id = $2',
+      values: [hashedPassword, id],
+    };
+    await this._pool.query(query);
+  }
 }
 
 export default new UserRepository();
