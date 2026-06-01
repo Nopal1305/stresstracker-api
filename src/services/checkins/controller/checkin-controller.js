@@ -39,7 +39,7 @@ export const addCheckin = async (req, res, next) => {
     const { suasana_hati, konflik_interpersonal, merasa_kesepian, meditasi, interaksi_sosial } = mentalSosial;
 
     const payloadData = {
-      owner, date: tanggal, jenis_kelamin: jenisKelamin,
+      jenis_kelamin: jenisKelamin,
       pekerjaan: pekerjaan,
       usia: usia, durasi_tidur_menit, screen_sebelum_tidur, sering_terbangun_malam, mimpi_buruk,
       waktu_outdoor, minum_kopi_hari_ini, merokok, konsumsi_alkohol, aktivitas_hobi,
