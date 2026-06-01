@@ -42,13 +42,13 @@ class UserRepository {
     const result = await this._pool.query(querySearch);
 
     if (!result.rows.length) {
-      return new NotFoundError('Email tidak terdaftar');
+      throw new NotFoundError('Email tidak terdaftar');
     }
 
     const user = result.rows[0];
 
     if (user.is_verified) {
-      return new InvariantError('Akun sudah terverifikasi');
+      throw new InvariantError('Akun sudah terverifikasi');
     }
 
     if (user.otp_code !== otpCode) {
@@ -57,7 +57,7 @@ class UserRepository {
 
     const now = new Date();
     if (user.otp_expired_at < now) {
-      return new InvariantError('Otp kedaluwarsa');
+      throw new InvariantError('Otp kedaluwarsa');
     }
 
     const queryUpdate = {
