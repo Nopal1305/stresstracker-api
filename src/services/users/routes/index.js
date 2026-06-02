@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, verifyOTP, getUserProfile, forgotPassword, resetPassword, changePassword, editProfile } from '../controller/user-controller.js';
+import { registerUser, verifyOTP, getUserProfile, forgotPassword, resetPassword, changePassword, editProfile, saveFcmToken } from '../controller/user-controller.js';
 import validate from '../../../middleware/validate.js';
 import authenticateToken from '../../../middleware/auth.js';
 import { UserRegistrationSchema, VerifyOTPSchema, ForgotPasswordSchema, ResetPasswordSchema, ChangePasswordSchema, EditProfileSchema } from '../validator/schema.js';
@@ -13,5 +13,6 @@ router.post('/forgot-password', validate(ForgotPasswordSchema), forgotPassword);
 router.post('/reset-password', validate(ResetPasswordSchema), resetPassword);
 router.put('/change-password', authenticateToken, validate(ChangePasswordSchema), changePassword);
 router.put('/me/change', authenticateToken, validate(EditProfileSchema), editProfile);
+router.put('/users/fcm-token', authenticateToken, saveFcmToken);
 
 export default router;

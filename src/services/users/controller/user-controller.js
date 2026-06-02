@@ -123,3 +123,16 @@ export const resetPassword = async (req, res, next) => {
     return next(error);
   }
 };
+
+export const saveFcmToken = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { fcmToken } = req.validated;
+
+    await UserRepository.updateFcmToken(userId, fcmToken);
+
+    return response(res, 200, 'FCM Token berhasil disimpan');
+  } catch (error) {
+    return next(error);
+  }
+};

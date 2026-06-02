@@ -212,6 +212,23 @@ class UserRepository {
 
     return result.rows[0].id;
   }
+
+  async updateFcmToken(userId, fcmToken) {
+    const query = {
+      text: 'UPDATE users SET fcm_token = $1 WHERE id = $2',
+      values: [fcmToken, userId],
+    };
+    await this._pool.query(query);
+  }
+
+  async getFcmToken(userId) {
+    const query = {
+      text: 'SELECT fcm_token FROM users WHERE id = $1',
+      values: [userId],
+    };
+    const result = await this._pool.query(query);
+    return result.rows.length ? result.rows[0].fcm_token : null;
+  }
 }
 
 export default new UserRepository();
