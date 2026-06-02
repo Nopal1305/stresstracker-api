@@ -50,10 +50,10 @@ export const addCheckin = async (req, res, next) => {
     let stress_level_result = null;
     try {
 
-      const mlResponse = await axios.post('https://nooww-stresstracker-ml.hf.space/predict', payloadData);
+      const mlResponse = await axios.post('https://nooww-stresstracker-ml.hf.space/predict', payloadData, { timeout: 30000 });
 
       if (mlResponse.data && mlResponse.data.status === 'success') {
-        stress_level_result = parseInt(mlResponse.data.stress_level_result,  { timeout: 30000 });
+        stress_level_result = parseInt(mlResponse.data.stress_level_result);
       }
     } catch (mlError) {
       console.error('Gagal menghubungi API Python:', mlError.message);

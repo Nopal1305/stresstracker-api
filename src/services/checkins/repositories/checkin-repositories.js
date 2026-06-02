@@ -69,7 +69,7 @@ class CheckinRepository {
         meditasi,
         konsentrasi,
         interaksi_sosial,
-        stress_level_result || null,
+        stress_level_result ?? null,
         createdAt,
         updatedAt
       ],
