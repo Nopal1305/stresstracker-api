@@ -35,7 +35,7 @@ export const up = (pgm) => {
     interaksi_sosial: { type: 'INTEGER', notNull: true },
 
     // Kolom Tambahan untuk Menyimpan Hasil Prediksi Model ML Python
-    stress_level_result: { type: 'VARCHAR(50)' },
+    stress_level_result: { type: 'INTEGER' },
 
     // Timestamps
     created_at: { type: 'TEXT', notNull: true },

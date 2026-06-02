@@ -41,7 +41,13 @@ export const getUserProfile = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const user = await userRepositorie.getUserById(userId);
-    return response(res, 200, 'Profil pengguna berhasil diambil', { user });
+    const birthYear = new Date(user.birthDate).getFullYear();
+    const currentYear = new Date().getFullYear();
+    const umur = currentYear - birthYear;
+    return response(res, 200, 'Profil pengguna berhasil diambil', { user: {
+      ...user,
+      umur: umur
+    } });
   } catch (error) {
     return next(error);
   }
@@ -54,7 +60,6 @@ export const changePassword = async (req, res, next) => {
 
     const user = await UserRepository.getUserPasswordById(userId);
 
-    // 2. Cek kecocokan password lama
     const isMatch = await bcrypt.compare(oldPassword, user.password);
     if (!isMatch) {
       throw new InvariantError('Password lama yang Anda masukkan salah.');
@@ -64,6 +69,25 @@ export const changePassword = async (req, res, next) => {
     await UserRepository.updatePassword(userId, hashedNewPassword);
 
     return response(res, 200, 'Password berhasil diperbarui!');
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const editProfile = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const { fullname, username, birthDate, pekerjaan } = req.validated;
+
+    await UserRepository.updateProfile(userId, {
+      fullname,
+      username,
+      birthDate,
+      pekerjaan
+    });
+
+    return response(res, 200, 'Profil berhasil diperbarui!');
   } catch (error) {
     return next(error);
   }

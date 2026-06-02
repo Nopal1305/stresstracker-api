@@ -197,6 +197,21 @@ class UserRepository {
     };
     await this._pool.query(query);
   }
+
+  async updateProfile(id, { fullname, username, birthDate, pekerjaan }) {
+    const query = {
+      text: 'UPDATE users SET fullname = $1, username = $2, birth_date = $3, pekerjaan = $4 WHERE id = $5 RETURNING id',
+      values: [fullname, username, birthDate, pekerjaan, id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Gagal memperbarui profil. User tidak ditemukan.');
+    }
+
+    return result.rows[0].id;
+  }
 }
 
 export default new UserRepository();
