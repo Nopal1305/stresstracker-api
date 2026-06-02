@@ -229,6 +229,23 @@ class UserRepository {
     const result = await this._pool.query(query);
     return result.rows.length ? result.rows[0].fcm_token : null;
   }
+
+  async updateReminderTime(userId, time) {
+    const query = {
+      text: 'UPDATE users SET reminder_time = $1 WHERE id = $2',
+      values: [time, userId],
+    };
+    await this._pool.query(query);
+  }
+
+  async getUsersToRemind(currentTime) {
+    const query = {
+      text: 'SELECT id, fcm_token FROM users WHERE reminder_time = $1 AND fcm_token IS NOT NULL',
+      values: [currentTime]
+    };
+    const result = await this._pool.query(query);
+    return result.rows;
+  }
 }
 
 export default new UserRepository();

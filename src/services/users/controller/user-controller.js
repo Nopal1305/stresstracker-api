@@ -136,3 +136,20 @@ export const saveFcmToken = async (req, res, next) => {
     return next(error);
   }
 };
+
+export const saveReminderTime = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { reminderTime } = req.body;
+
+    if (!reminderTime) {
+      throw new InvariantError('Waktu pengingat wajib dikirim! (format HH:MM)');
+    }
+
+    await UserRepository.updateReminderTime(userId, reminderTime);
+
+    return response(res, 200, `Pengingat berhasil diatur untuk jam ${reminderTime}`);
+  } catch (error) {
+    return next(error);
+  }
+};
