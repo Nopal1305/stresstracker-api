@@ -127,7 +127,7 @@ export const resetPassword = async (req, res, next) => {
 export const saveFcmToken = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const { fcmToken } = req.validated;
+    const { fcmToken } = req.body;
 
     await UserRepository.updateFcmToken(userId, fcmToken);
 
