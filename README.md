@@ -47,3 +47,5 @@ REFRESH_TOKEN_KEY=
 ```bash
 npm start
 ```
+## 📡 API Routes Documentation
+Daftar lengkap endpoint aplikasi tersedia disini: https://nopal1305.github.io/stresstracker-api/#/
