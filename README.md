@@ -23,7 +23,7 @@ Sebelum menjalankan *server* ini di lokal, pastikan kamu sudah menyiapkan:
 
 1. **Clone repository ini**
 ```bash
-   git clone [https://github.com/username-kamu/stresstracker-backend.git](https://github.com/username-kamu/stresstracker-backend.git)
+   git clone https://github.com/Nopal1305/stresstracker-api.git
    cd stresstracker-backend
 ```
 
